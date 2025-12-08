@@ -17,24 +17,54 @@ client = Client(
 )
 
 def get_latitude_longitude(city:str):
-  prompt = '''You are an assistant that is an expert at geography.
+
+  prompt = f'''
+  You are an assistant that is an expert at geography.
 
   Here is the end user's query:
 
-  {query}
+  <QUERY>
+  {city}
+  </QUERY>
 
   Your job is to take the end user's query and return a reasonable latitude and longitude point for that location.
 
   when you receive the named location, assume it is a city, but if the query is specific, than use the more specific
   location.
 
-  Here is an example json response for New York City:
-  {
-    "latitude":40.710335
-    "longitude":-73.99309
-  }
+  If you cannot determine the location, return an empty json response.
 
-  If you cannot determine the location, return an empty json response.'''
+  Example 1:
+  Input: "New York City"
+  Output:
+  {{
+    "latitude": 40.730610,
+    "longitude": -73.935242
+  }}
+
+  Example 2:
+  Input: "Boulder, Colorado"
+  Output:
+  {{
+    "latitude": 40.014984,
+    "longitude": -105.270546
+  }}
+
+  Example 2:
+  Input: "Uppsala"
+  Output:
+  {{
+    "latitude": 59.86993,
+    "longitude": 17.64749
+  }}
+
+  Example 4:
+  Input: "SomeUnknownPlaceThatDoesNotExist"
+  Output:
+  {{ }}
+  '''
+
+  print("Prompt to get lat/long: "+prompt)
   
   messages = [{"role":"system", "content":prompt}]
 
@@ -43,7 +73,8 @@ def get_latitude_longitude(city:str):
     model='qwen3:1.7b',
     #format="json", #or schema
     stream=False,
-    messages=messages)
+    messages=messages,
+    think=False)
 
   print(agent_res)
 
@@ -68,15 +99,6 @@ def current_tempature(location:str) -> str:
 
   print(json.dumps(lat_long_json))
 
-  # do stuff here...
-  # call a simple model to get the lat/long of the entered city as a json response.
-  ## Give example of how to return the json response.
-  # Take the returned lat/long and call the Open-Meteo api to get current tempature.
-  # https://open-meteo.com/en/docs
-  # Example:
-  # https://api.open-meteo.com/v1/forecast?latitude=40.7143&longitude=-74.006&hourly=temperature_2m
-  # Returns the following json:
-
   return current_tempature_lat_long(lat_long_json["latitude"], lat_long_json["longitude"])
 ## Test
 #tempature = current_tempature("What's the tempature in New York?")
@@ -97,7 +119,7 @@ tool_current_tempature = {
   }}
 
 prompt = '''You are an assistant with access to tools, you must decide when to use tools to answer user message.'''
-query = '''What's the weather in Boulder?'''
+query = '''What's the weather in Boulder, Colorado?'''
 messages = [{"role":"system", "content":prompt},
   {"role":"user", "content":query}]
 
