@@ -16,6 +16,8 @@ client = Client(
   host='http://ollama:11434'
 )
 
+chat_model = "qwen3:1.7b"
+
 def current_time() -> str:
   return datetime.now()
 
@@ -37,7 +39,7 @@ messages = [{"role":"system", "content":prompt},
   {"role":"user", "content":query}]
 
 agent_res = client.chat(
-  model='qwen3:1.7b',
+  model=chat_model,
   stream=False,
   tools=[tool_current_time],
   messages=messages)
@@ -79,7 +81,7 @@ if agent_res.message.tool_calls:
       print(tool_messages)
 
       agent_res = client.chat(
-        model='qwen3:1.7b',
+        model=chat_model,
         stream=False,
         messages=tool_messages)
       print(agent_res)

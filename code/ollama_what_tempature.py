@@ -16,6 +16,8 @@ client = Client(
   host='http://ollama:11434'
 )
 
+chat_model = "qwen3:1.7b"
+
 def get_latitude_longitude(city:str):
 
   prompt = f'''
@@ -69,9 +71,7 @@ def get_latitude_longitude(city:str):
   messages = [{"role":"system", "content":prompt}]
 
   agent_res = client.chat(
-    #model='qwen3:4b',
-    model='qwen3:1.7b',
-    #format="json", #or schema
+    model=chat_model,
     stream=False,
     messages=messages,
     think=False)
@@ -124,7 +124,7 @@ messages = [{"role":"system", "content":prompt},
   {"role":"user", "content":query}]
 
 agent_res = client.chat(
-  model='qwen3:1.7b',
+  model=chat_model,
   stream=False,
   tools=[tool_current_tempature],
   messages=messages)
@@ -163,8 +163,7 @@ if agent_res.message.tool_calls:
       print(tool_messages)
 
       agent_res = client.chat(
-        #model='qwen3:4b',
-        model='qwen3:1.7b',
+        model=chat_model,
         stream=False,
         messages=tool_messages)
       print(agent_res)
