@@ -1,0 +1,55 @@
+services:
+  ollama:
+    image: ollama/ollama:0.13.5
+    container_name: ollama
+    environment:
+      - OLLAMA_DEBUG=1
+    volumes:
+      - ./ollama:/root/.ollama
+    ports:
+      - 11434:11434
+    restart: unless-stopped
+    networks:
+      - ollama
+  open-webui:
+    # TODO: Which is better, latest or main?  A:  Latest, latest is actually the latest official
+    # release, while main is most likely the latest checkin on the main branch.
+    #
+    # Fine releases here:
+    # https://github.com/open-webui/open-webui
+    #
+    # To see all releases:
+    # https://github.com/open-webui/open-webui/pkgs/container/open-webui
+    image: ghcr.io/open-webui/open-webui:v0.6.43
+    container_name: openwebui
+    depends_on:
+      - ollama
+    environment:
+      # Environment Variable Configuration
+      # https://docs.openwebui.com/getting-started/env-configuration/
+      - OLLAMA_BASE_URL=http://ollama:11434
+
+      # IMPORTANT
+      # Before changing this value, please read about how PersistentConfig works:
+      # https://docs.openwebui.com/getting-started/env-configuration/#important-note-on-persistentconfig-environment-variables
+      # If set to False, all PersistentConfig variables are treated as regular variables.
+      #- ENABLE_PERSISTENT_CONFIG=false
+      # Re-enabling this setting because we kept loosing our connection settings to pipelines
+      # and loosing our default model settings.
+      - ENABLE_PERSISTENT_CONFIG=true
+
+      # Disables Open WebUI's network connections for update checks and automatic model downloads.
+      # This will turn off the notification at the bottom of the screen saying a new version is available.
+      - OFFLINE_MODE=true
+    volumes:
+      - ./openwebui:/app/backend/data
+    ports:
+      - 3000:8080
+    restart: unless-stopped
+    networks:
+      - ollama
+
+networks:
+  gateway-network:
+    name: ollama
+    external: true
