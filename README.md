@@ -2,6 +2,11 @@ This requires a previously setup ollama docker container running on a network ca
 The network can be called something else, but the `--network ollama` name below will have to be
 changed.
 
+Only ever needs to be run once:
+```
+docker network create ollama
+```
+
 ```
 docker build -t ollama-tools:0.0.1 .
 ```
@@ -28,10 +33,4 @@ python3 ollama_what_temperature.py
 
 ```
 python3 ollama_what_temperature_inner_thoughts.py
-```
-
-## Create Ollama Docker Network
-
-```
-docker network create ollama
 ```
