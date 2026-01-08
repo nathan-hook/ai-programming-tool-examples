@@ -29,3 +29,9 @@ python3 ollama_what_temperature.py
 ```
 python3 ollama_what_temperature_inner_thoughts.py
 ```
+
+## Create Ollama Docker Network
+
+```
+docker network create ollama
+```
