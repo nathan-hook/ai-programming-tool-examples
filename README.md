@@ -1,6 +1,6 @@
-This requires a previously setup ollama docker container running on a network called 'ollama'.
-The network can be called something else, but the `--network ollama` name below will have to be
-changed.
+# AI Programming Tool Examples
+
+## Setup
 
 Only ever needs to be run once:
 ```
@@ -19,6 +19,12 @@ Create the python container that is used to run the example tool python scripts.
 ```
 docker build -t ollama-tools:0.0.1 .
 ```
+
+## Execution
+
+The following command requires a previously setup ollama docker container running on a network called 'ollama'.
+The network can be called something else, but the `--network ollama` name below will have to be
+changed.
 
 Run the python container.
 ```
