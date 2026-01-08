@@ -10,7 +10,7 @@ services:
       - 11434:11434
     restart: unless-stopped
     networks:
-      - ollama
+      - ollama-network
   open-webui:
     # TODO: Which is better, latest or main?  A:  Latest, latest is actually the latest official
     # release, while main is most likely the latest checkin on the main branch.
@@ -47,9 +47,9 @@ services:
       - 3000:8080
     restart: unless-stopped
     networks:
-      - ollama
+      - ollama-network
 
 networks:
-  gateway-network:
+  ollama-network:
     name: ollama
     external: true
